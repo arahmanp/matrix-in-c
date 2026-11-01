@@ -65,6 +65,70 @@ double getMatrixElementAt(const Matrix *m, size_t i, size_t j) {
     return m->matrix[i][j];
 }
 
+Matrix addMatrix(const Matrix *A, const Matrix *B) {
+    if(A->row != B->row || A->col != B->col) {
+        printf("Dimension is not match.\n");
+        exit(1);
+    }
+
+    size_t rowResult = A->row;
+    size_t colResult = A->col;
+
+    Matrix result = createMatrix(rowResult, colResult, 0.0);
+
+    for(size_t i = 0; i < rowResult; i++) {
+        for(size_t j = 0; j < colResult; j++) {
+            setMatrixElementAt(&result, i, j, getMatrixElementAt(A, i, j) + getMatrixElementAt(B, i, j));
+        }
+    }
+
+    return result;
+}
+
+Matrix subtractMatrix(const Matrix *A, const Matrix *B) {
+    if(A->row != B->row || A->col != B->col) {
+        printf("Dimension is not match.\n");
+        exit(1);
+    }
+
+    size_t rowResult = A->row;
+    size_t colResult = A->col;
+
+    Matrix result = createMatrix(rowResult, colResult, 0.0);
+
+    for(size_t i = 0; i < rowResult; i++) {
+        for(size_t j = 0; j < colResult; j++) {
+            setMatrixElementAt(&result, i, j, getMatrixElementAt(A, i, j) - getMatrixElementAt(B, i, j));
+        }
+    }
+
+    return result;
+}
+
+Matrix multiplyMatrix(const Matrix *A, const Matrix *B) {
+    if(A->col != B->row) {
+        printf("Dimension is not match.\n");
+        exit(1);
+    }
+
+    size_t rowResult = A->row;
+    size_t colResult = B->col;
+
+    Matrix result = createMatrix(rowResult, colResult, 0.0);
+
+    for(size_t i = 0; i < rowResult; i++) {
+        for(size_t j = 0; j < colResult; j++) {
+            double sum = 0.0;
+            for(size_t k = 0; k < A->col; k++) {
+                sum += (getMatrixElementAt(A, i, k) * getMatrixElementAt(B, k, j));
+            }
+            setMatrixElementAt(&result, i, j, sum);
+        }
+    }
+
+    return result;
+}
+
 void deleteMatrix(Matrix *m) {
     for(size_t i = 0; i < m->row; i++) {
         free(m->matrix[i]);
